@@ -31,7 +31,7 @@ class Sdk {
     }
 
     suspend fun createOAuth2URL(token: String) : CreateOAuth2LinkResponse {
-        val request =client.post("https://api.discordreward.kakuszcode.pl/register/") {
+        val request =client.post("https://api.discordreward.kakuszcode.pl/create/oauth2") {
             headers {
                 append("Authorization", "Bearer $token")
             }
