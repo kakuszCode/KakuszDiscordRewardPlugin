@@ -21,7 +21,7 @@ allprojects {
         implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
         implementation("io.ktor:ktor-client-core:2.1.3")
         implementation("io.ktor:ktor-client-cio:2.1.3")
-        implementation("io.ktor:ktor-client-websockets:2.1.3")
+        implementation("io.ktor:ktor-client-websockets:2.2.1")
     }
 
 }
