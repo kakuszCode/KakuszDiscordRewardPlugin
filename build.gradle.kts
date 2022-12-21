@@ -6,7 +6,7 @@ plugins {
     kotlin("plugin.serialization") version "1.7.22"
 }
 group = "pl.kakuszcode"
-version = "1.0.7"
+version = "1.0.8"
 
 allprojects {
     apply(plugin = "java")
@@ -25,7 +25,7 @@ allprojects {
         implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
         implementation("eu.okaeri:okaeri-configs-serdes-bukkit:4.0.8")
         implementation("com.github.ben-manes.caffeine:caffeine:2.9.3")
-        testImplementation("com.h2database:h2:2.1.214")
+        implementation("com.h2database:h2:2.1.214")
         implementation("org.postgresql:postgresql:42.5.1")
         implementation("com.zaxxer:HikariCP:4.0.3")
         implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
