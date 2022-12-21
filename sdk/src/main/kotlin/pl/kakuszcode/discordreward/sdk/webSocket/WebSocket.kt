@@ -1,34 +1,40 @@
 package pl.kakuszcode.discordreward.sdk.webSocket
 
-import io.ktor.client.*
-import io.ktor.client.plugins.websocket.*
-import io.ktor.http.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import okhttp3.*
+import okhttp3.WebSocket
 import pl.kakuszcode.discordreward.sdk.event.WebSocketEvent
-import pl.kakuszcode.discordreward.sdk.response.SuccessfulAuthResponse
 
-class WebSocket {
-    private val client: HttpClient
-    private val events: List<WebSocketEvent>
 
-    constructor(client: HttpClient, events: List<WebSocketEvent>) {
-        this.client = client
-        this.events = events
+class WebSocket(private val events: List<WebSocketEvent>, private val bearer: String, private val url: String) :
+    WebSocketListener() {
+    private val client = OkHttpClient()
+
+    fun run() {
+        val request = Request.Builder()
+            .url("wss://$url/successful/oauth2/$bearer/")
+            .build()
+        client.newWebSocket(request, this)
+        client.dispatcher.executorService.shutdown();
+
+    }
+
+    override fun onMessage(webSocket: WebSocket, text: String) {
+        events.forEach { it.onMessage(Json.decodeFromString(text)) }
+    }
+
+    override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+        webSocket.close(1000, null);
+        throw IllegalStateException(if (code == 1003) "Invalid license or license is usage!" else "Unknown exception")
     }
 
 
-    suspend fun run() {
-        client.webSocket(
-            method = HttpMethod.Get,
-            host = "https://api.discordreward.kakuszcode.pl",
-            port = 80,
-            path = "/successful/oauth2"
-        ) {
-            try {
-                val response = receiveDeserialized<SuccessfulAuthResponse>()
-                events.forEach { it.onMessage(response) }
-            } catch (e: Exception) {
-                e.printStackTrace();
-            }
-        }
+    override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+        t.printStackTrace()
     }
+
+
 }
+
+
