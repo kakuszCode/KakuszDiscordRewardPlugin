@@ -13,9 +13,11 @@ class WebSocketListener(private val service: DiscordService, private val config:
         val user =DiscordUser(player.uniqueId, response.discordUserID)
         service.hashMap[player.uniqueId] = user
         service.database.insertDiscordUser(user, plugin)
-        config.commands.forEach {
-            plugin.server.dispatchCommand(plugin.server.consoleSender, it.replace("[player]", player.name))
-        }
+        plugin.server.scheduler.runTask(plugin, Runnable {
+            config.commands.forEach {
+                plugin.server.dispatchCommand(plugin.server.consoleSender, it.replace("[player]", player.name))
+            }
+        })
 
     }
 }

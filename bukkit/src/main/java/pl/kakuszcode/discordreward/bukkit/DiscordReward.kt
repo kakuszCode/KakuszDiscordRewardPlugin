@@ -70,7 +70,14 @@ class DiscordReward : JavaPlugin() {
             service = DiscordService(database)
             server.getPluginCommand("discord")?.setExecutor(DiscordCommand(token, sdk))
             service.loadUsers(logger)
-            sdk.loadWebSocket(token, listOf(WebSocketListener(service, config, this@DiscordReward)))
+            try {
+                sdk.loadWebSocket(token, listOf(WebSocketListener(service, config, this@DiscordReward)))
+            } catch (e: IllegalStateException) {
+
+                logger.severe("Wystąpił problem z websocket error: ${e.message}")
+                server.pluginManager.disablePlugin(this@DiscordReward)
+
+            }
         }
 
     }
