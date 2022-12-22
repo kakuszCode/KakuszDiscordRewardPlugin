@@ -83,25 +83,10 @@ class DiscordReward : JavaPlugin() {
         }
 
     }
-    private fun loadWebSocket(){
+    fun loadWebSocket(){
         GlobalScope.launch {
-            try {
                 sdk.loadWebSocket(token, listOf(WebSocketListener(service, config, this@DiscordReward)))
                 webSocketIsRunning = true
-            } catch (e: IllegalStateException) {
-                webSocketIsRunning = false
-                if (e.message == "Invalid license or license is usage!"){
-                    logger.severe("Wystąpił problem z licencja error: ${e.message}")
-                    server.pluginManager.disablePlugin(this@DiscordReward)
-                }
-                logger.severe("Wystąpił problem z WebSocket error: ${e.message}")
-                logger.severe("WebSocket zostanie ponownie połączony za 120s!")
-                server.scheduler.runTaskLaterAsynchronously(this@DiscordReward, Runnable{
-                    loadWebSocket()
-                }, 20L *120)
-
-
-            }
         }
     }
 

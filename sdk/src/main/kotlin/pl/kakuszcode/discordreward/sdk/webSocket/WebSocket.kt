@@ -25,13 +25,16 @@ class WebSocket(private val events: List<WebSocketEvent>, private val bearer: St
     }
 
     override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-        webSocket.close(1000, null);
-        throw IllegalStateException(if (code == 1003) "Invalid license or license is usage!" else "Unknown exception")
+        webSocket.close(code, reason);
+        events.forEach { it.onException(if (code == 1003) "Invalid license or license is usage!" else "Unknown exception")}
+    }
+    override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+        events.forEach { it.onException(if (code == 1003) "Invalid license or license is usage!" else "Unknown exception")}
     }
 
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-        t.printStackTrace()
+        events.forEach { it.onException("Unknown exception")}
     }
 
 
