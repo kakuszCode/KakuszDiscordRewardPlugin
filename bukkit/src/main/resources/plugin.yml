@@ -4,4 +4,4 @@ main: pl.kakuszcode.discordreward.bukkit.DiscordReward
 authors: [robalmeister]
 commands:
   discord:
-    aliases: ["discordReward"]
+    aliases: ["discordreward"]

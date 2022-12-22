@@ -20,7 +20,7 @@ import pl.kakuszcode.discordreward.sdk.request.CreateOAuth2LinkRequest
 import java.time.Duration
 import java.util.UUID
 
-class DiscordCommand(private val service: DiscordService,private val token: String,private val sdk: Sdk, private val cache: Cache<UUID, String> = Caffeine.newBuilder().expireAfterWrite(Duration.ofMillis(1)).build()) : CommandExecutor {
+class DiscordCommand(private val service: DiscordService,private val token: String,private val sdk: Sdk, private val cache: Cache<UUID, String> = Caffeine.newBuilder().expireAfterWrite(Duration.ofMinutes(1)).build()) : CommandExecutor {
 
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
