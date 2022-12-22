@@ -18,6 +18,9 @@ import java.io.File
 
 @OptIn(DelicateCoroutinesApi::class)
 class DiscordReward : JavaPlugin() {
+    companion object {
+        var webSocketIsRunning = false
+    }
     private lateinit var config: Configuration
     private lateinit var sdk: Sdk
     private lateinit var token: String
@@ -54,7 +57,9 @@ class DiscordReward : JavaPlugin() {
                 database = config.databaseEnum.databaseClass.getDeclaredConstructor().newInstance()
             } catch (e: Exception) {
                 logger.severe("Błąd: $e")
+                server.pluginManager.disablePlugin(this@DiscordReward)
             }
+            try {
             when (config.databaseEnum) {
                 DatabaseEnum.H2 -> database.connect(config.jdbc, logger)
                 DatabaseEnum.MYSQL -> database.connect(
@@ -68,18 +73,36 @@ class DiscordReward : JavaPlugin() {
                 )
             }
             service = DiscordService(database)
-            server.getPluginCommand("discord")?.setExecutor(DiscordCommand(token, sdk))
+            server.getPluginCommand("discord")?.setExecutor(DiscordCommand(service,token, sdk))
             service.loadUsers(logger)
+            } catch (e: Exception) {
+                logger.severe("Błąd: $e")
+                server.pluginManager.disablePlugin(this@DiscordReward)
+            }
+            loadWebSocket()
+        }
+
+    }
+    private fun loadWebSocket(){
+        GlobalScope.launch {
             try {
                 sdk.loadWebSocket(token, listOf(WebSocketListener(service, config, this@DiscordReward)))
+                webSocketIsRunning = true
             } catch (e: IllegalStateException) {
+                webSocketIsRunning = false
+                if (e.message == "Invalid license or license is usage!"){
+                    logger.severe("Wystąpił problem z licencja error: ${e.message}")
+                    server.pluginManager.disablePlugin(this@DiscordReward)
+                }
+                logger.severe("Wystąpił problem z WebSocket error: ${e.message}")
+                logger.severe("WebSocket zostanie ponownie połączony za 120s!")
+                server.scheduler.runTaskLaterAsynchronously(this@DiscordReward, Runnable{
+                    loadWebSocket()
+                }, 20L *120)
 
-                logger.severe("Wystąpił problem z websocket error: ${e.message}")
-                server.pluginManager.disablePlugin(this@DiscordReward)
 
             }
         }
-
     }
 
 

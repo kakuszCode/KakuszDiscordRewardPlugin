@@ -12,13 +12,15 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import pl.kakuszcode.discordreward.bukkit.DiscordReward
 import pl.kakuszcode.discordreward.bukkit.extension.fixColors
+import pl.kakuszcode.discordreward.bukkit.user.service.DiscordService
 import pl.kakuszcode.discordreward.sdk.Sdk
 import pl.kakuszcode.discordreward.sdk.request.CreateOAuth2LinkRequest
 import java.time.Duration
 import java.util.UUID
 
-class DiscordCommand(private val token: String,private val sdk: Sdk, private val cache: Cache<UUID, String> = Caffeine.newBuilder().expireAfterWrite(Duration.ofMillis(1)).build()) : CommandExecutor {
+class DiscordCommand(private val service: DiscordService,private val token: String,private val sdk: Sdk, private val cache: Cache<UUID, String> = Caffeine.newBuilder().expireAfterWrite(Duration.ofMillis(1)).build()) : CommandExecutor {
 
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
@@ -26,14 +28,26 @@ class DiscordCommand(private val token: String,private val sdk: Sdk, private val
             sender.sendMessage("&4Błąd: &cMusisz być graczem aby użyć tej komendy!".fixColors())
             return false
         }
+        if (!DiscordReward.webSocketIsRunning){
+            sender.sendMessage("&4Błąd: &cProblem z połączeniem!, sprobój pózniej!".fixColors())
+            return false
+        }
+        if (service.hashMap[sender.uniqueId] != null){
+            sender.sendMessage("&4Błąd: &cOdebrałeś już nagrodę!")
+            return false
+        }
         if (cache.getIfPresent(sender.uniqueId) != null) {
             sender.sendMessage("&2Sukces: &aTwój link do nagrody: ${cache.getIfPresent(sender.uniqueId)}".fixColors())
             return false
         }
         GlobalScope.async {
-            val response = sdk.createOAuth2URL(token, CreateOAuth2LinkRequest(sender.name))
-            cache.put(sender.uniqueId, response.url)
-            sender.sendMessage("&2Sukces: &aTwój link do nagrody: ${response.url}".fixColors())
+            try {
+                val response = sdk.createOAuth2URL(token, CreateOAuth2LinkRequest(sender.name))
+                cache.put(sender.uniqueId, response.url)
+                sender.sendMessage("&2Sukces: &aTwój link do nagrody: ${response.url}".fixColors())
+            } catch (e: Exception) {
+                sender.sendMessage("&4Błąd: Nie udało się zdobyć nagrody!".fixColors())
+            }
         }
 
         return false
