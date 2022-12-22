@@ -33,7 +33,7 @@ class DiscordCommand(private val service: DiscordService,private val token: Stri
             return false
         }
         if (service.hashMap[sender.uniqueId] != null){
-            sender.sendMessage("&4Błąd: &cOdebrałeś już nagrodę!")
+            sender.sendMessage("&4Błąd: &cOdebrałeś już nagrodę!".fixColors())
             return false
         }
         if (cache.getIfPresent(sender.uniqueId) != null) {
