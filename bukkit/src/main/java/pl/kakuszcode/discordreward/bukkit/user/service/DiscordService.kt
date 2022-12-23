@@ -13,4 +13,10 @@ class DiscordService(val database: Database) {
             hashMap[it.uuid] = it
         }
     }
+    fun isContainsById(id: Long) : Boolean{
+        for (user in hashMap.values) {
+            if (user.discordID == id) return true
+        }
+        return false
+    }
 }

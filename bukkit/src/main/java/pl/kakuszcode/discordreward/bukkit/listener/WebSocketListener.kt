@@ -1,8 +1,8 @@
 package pl.kakuszcode.discordreward.bukkit.listener
 
-import org.bukkit.plugin.java.JavaPlugin
 import pl.kakuszcode.discordreward.bukkit.DiscordReward
 import pl.kakuszcode.discordreward.bukkit.config.Configuration
+import pl.kakuszcode.discordreward.bukkit.extension.fixColors
 import pl.kakuszcode.discordreward.bukkit.user.DiscordUser
 import pl.kakuszcode.discordreward.bukkit.user.service.DiscordService
 import pl.kakuszcode.discordreward.sdk.event.WebSocketEvent
@@ -11,7 +11,12 @@ import pl.kakuszcode.discordreward.sdk.response.SuccessfulAuthResponse
 class WebSocketListener(private val service: DiscordService, private val config: Configuration, private val plugin: DiscordReward) : WebSocketEvent() {
     override fun onMessage(response: SuccessfulAuthResponse) {
         val player = plugin.server.getPlayerExact(response.nickName) ?: return
+        if (service.isContainsById(response.discordUserID)) {
+            player.sendMessage("&4Błąd: &cJuż odebrałeś nagrodę!".fixColors())
+            return
+        }
         val user =DiscordUser(player.uniqueId, response.discordUserID)
+
         service.hashMap[player.uniqueId] = user
         service.database.insertDiscordUser(user, plugin)
         plugin.server.scheduler.runTask(plugin, Runnable {
