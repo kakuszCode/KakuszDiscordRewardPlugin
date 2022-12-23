@@ -1,6 +1,7 @@
 package pl.kakuszcode.discordreward.bukkit.bot.task
 
 import me.clip.placeholderapi.PlaceholderAPI
+import net.dv8tion.jda.api.exceptions.HierarchyException
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
 import pl.kakuszcode.discordreward.bukkit.bot.Bot
@@ -11,10 +12,15 @@ class BotTask(private val service: DiscordService, private val config: Configura
     override fun run() {
         for (user in service.hashMap.values) {
             val player = Bukkit.getPlayer(user.uuid) ?: break
+
             val guild = Bot.jda.getGuildById(config.guildIdDiscord) ?: return
             val discordUser = guild.getMemberById(user.discordID) ?: break
             if (discordUser.nickname == PlaceholderAPI.setPlaceholders(player, config.nickName)) break
-            discordUser.modifyNickname(PlaceholderAPI.setPlaceholders(player, config.nickName)).queue()
+            try {
+                discordUser.modifyNickname(PlaceholderAPI.setPlaceholders(player, config.nickName)).queue()
+            } catch (_: HierarchyException){
+
+            }
         }
     }
 }
