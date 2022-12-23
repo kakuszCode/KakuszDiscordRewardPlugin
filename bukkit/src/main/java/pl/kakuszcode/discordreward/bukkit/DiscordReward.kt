@@ -5,10 +5,12 @@ import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit
 import kotlinx.coroutines.*
 import org.bukkit.plugin.java.JavaPlugin
+import pl.kakuszcode.discordreward.bukkit.bot.Bot
+import pl.kakuszcode.discordreward.bukkit.bot.task.BotTask
 import pl.kakuszcode.discordreward.bukkit.commands.DiscordCommand
 import pl.kakuszcode.discordreward.bukkit.config.Configuration
 import pl.kakuszcode.discordreward.bukkit.db.Database
-import pl.kakuszcode.discordreward.bukkit.db.DatabaseEnum
+import pl.kakuszcode.discordreward.bukkit.db.DatabaseType
 import pl.kakuszcode.discordreward.bukkit.listener.WebSocketListener
 import pl.kakuszcode.discordreward.bukkit.user.service.DiscordService
 import pl.kakuszcode.discordreward.sdk.Sdk
@@ -61,25 +63,27 @@ class DiscordReward : JavaPlugin() {
             }
             try {
             when (config.databaseEnum) {
-                DatabaseEnum.H2 -> database.connect(config.jdbc, logger)
-                DatabaseEnum.MYSQL -> database.connect(
+                DatabaseType.H2 -> database.connect(config.jdbc, logger)
+                DatabaseType.MYSQL -> database.connect(
                     config.jdbc + ":" + config.username + ":" + config.password,
                     logger
                 )
 
-                DatabaseEnum.POSTGRESQL -> database.connect(
+                DatabaseType.POSTGRESQL -> database.connect(
                     config.jdbc + ":" + config.username + ":" + config.password,
                     logger
                 )
             }
             service = DiscordService(database)
-            server.getPluginCommand("discord")?.setExecutor(DiscordCommand(service,token, sdk))
+            server.getPluginCommand("discord")?.setExecutor(DiscordCommand(config,service,token, sdk))
             service.loadUsers(logger)
             } catch (e: Exception) {
                 logger.severe("Błąd: $e")
                 server.pluginManager.disablePlugin(this@DiscordReward)
             }
             loadWebSocket()
+            Bot(config).start()
+            BotTask(service, config).runTaskTimerAsynchronously(this@DiscordReward, 1200, 1200)
         }
 
     }
