@@ -15,7 +15,9 @@ class MySQLProvider : Database {
     private lateinit var connection: Connection
     override fun connect(password: String, logger: Logger) {
         val config = HikariConfig()
-        config.jdbcUrl = password
+        config.jdbcUrl = password.split("§")[0]
+        config.username = password.split("§")[1]
+        config.password = password.split("§")[2]
         config.addDataSourceProperty("cachePrepStmts", "true")
         config.addDataSourceProperty("prepStmtCacheSize", "250")
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")

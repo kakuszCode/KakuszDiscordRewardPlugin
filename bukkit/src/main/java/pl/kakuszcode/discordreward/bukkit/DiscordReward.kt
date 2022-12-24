@@ -65,12 +65,12 @@ class DiscordReward : JavaPlugin() {
             when (config.databaseEnum) {
                 DatabaseType.H2 -> database.connect(config.jdbc, logger)
                 DatabaseType.MYSQL -> database.connect(
-                    config.jdbc + ":" + config.username + ":" + config.password,
+                    config.jdbc + "§" + config.username + "§" + config.password,
                     logger
                 )
 
                 DatabaseType.POSTGRESQL -> database.connect(
-                    config.jdbc + ":" + config.username + ":" + config.password,
+                    config.jdbc + "§" + config.username + "§" + config.password,
                     logger
                 )
             }

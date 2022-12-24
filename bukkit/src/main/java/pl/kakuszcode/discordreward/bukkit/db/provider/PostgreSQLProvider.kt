@@ -20,7 +20,9 @@ class PostgreSQLProvider : Database {
             logger.severe("Błąd: $e")
         }
         val config = HikariConfig()
-        config.jdbcUrl = password
+        config.jdbcUrl = password.split("§")[0]
+        config.username = password.split("§")[1]
+        config.password = password.split("§")[2]
         config.addDataSourceProperty("cachePrepStmts", "true")
         config.addDataSourceProperty("prepStmtCacheSize", "250")
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
