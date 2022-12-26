@@ -23,6 +23,7 @@ class DiscordReward : JavaPlugin() {
     companion object {
         var webSocketIsRunning = false
     }
+
     private lateinit var config: Configuration
     private lateinit var sdk: Sdk
     private lateinit var token: String
@@ -62,38 +63,41 @@ class DiscordReward : JavaPlugin() {
                 server.pluginManager.disablePlugin(this@DiscordReward)
             }
             try {
-            when (config.databaseEnum) {
-                DatabaseType.H2 -> database.connect(config.jdbc, logger)
-                DatabaseType.MYSQL -> database.connect(
-                    config.jdbc + "§" + config.username + "§" + config.password,
-                    logger
-                )
+                when (config.databaseEnum) {
+                    DatabaseType.H2 -> database.connect(config.jdbc, logger)
+                    DatabaseType.MYSQL -> database.connect(
+                        config.jdbc + "§" + config.username + "§" + config.password,
+                        logger
+                    )
 
-                DatabaseType.POSTGRESQL -> database.connect(
-                    config.jdbc + "§" + config.username + "§" + config.password,
-                    logger
-                )
-            }
-            service = DiscordService(database)
-            server.getPluginCommand("discord")?.setExecutor(DiscordCommand(config,service,token, sdk))
-            service.loadUsers(logger)
+                    DatabaseType.POSTGRESQL -> database.connect(
+                        config.jdbc + "§" + config.username + "§" + config.password,
+                        logger
+                    )
+                }
+                service = DiscordService(database)
+                server.getPluginCommand("discord")?.setExecutor(DiscordCommand(config, service, token, sdk))
+                service.loadUsers(logger)
             } catch (e: Exception) {
                 logger.severe("Błąd: $e")
                 server.pluginManager.disablePlugin(this@DiscordReward)
             }
             loadWebSocket()
-            server.scheduler.runTaskTimerAsynchronously(this@DiscordReward, Runnable {
-                service.loadUsers(logger)
-            },6000L, 6000L)
+            if (config.databaseReload) {
+                server.scheduler.runTaskTimerAsynchronously(this@DiscordReward, Runnable {
+                    service.loadUsers(logger)
+                }, 6000L, 6000L)
+            }
             Bot(config).start()
             BotTask(service, config).runTaskTimerAsynchronously(this@DiscordReward, 1200, 1200)
         }
 
     }
-    fun loadWebSocket(){
+
+    fun loadWebSocket() {
         GlobalScope.launch {
-                sdk.loadWebSocket(token, listOf(WebSocketListener(service, config, this@DiscordReward)))
-                webSocketIsRunning = true
+            sdk.loadWebSocket(token, listOf(WebSocketListener(service, config, this@DiscordReward)))
+            webSocketIsRunning = true
         }
     }
 
