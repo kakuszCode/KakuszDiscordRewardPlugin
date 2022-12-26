@@ -37,15 +37,15 @@ class DiscordCommand(
             return false
         }
         if (!DiscordReward.webSocketIsRunning) {
-            sender.sendMessage("&4Błąd: &cProblem z połączeniem!, sprobój pózniej!".fixColors())
+            sender.sendMessage(config.webSocketError.fixColors())
             return false
         }
         if (service.hashMap[sender.uniqueId] != null && !config.multiplyVerify) {
-            sender.sendMessage("&4Błąd: &cOdebrałeś już nagrodę!".fixColors())
+            sender.sendMessage(config.isPicked.fixColors())
             return false
         }
         if (cache.getIfPresent(sender.uniqueId) != null) {
-            sender.sendMessage("&2Sukces: &aTwój link do nagrody: ${cache.getIfPresent(sender.uniqueId)}".fixColors())
+            sender.sendMessage(config.link.replace("{url}", cache.getIfPresent(sender.uniqueId)!!).fixColors())
             return false
         }
         GlobalScope.async {
@@ -55,9 +55,9 @@ class DiscordCommand(
                     CreateOAuth2LinkRequest(sender.name, PlaceholderAPI.setPlaceholders(sender, config.nickName))
                 )
                 cache.put(sender.uniqueId, response.url)
-                sender.sendMessage("&2Sukces: &aTwój link do nagrody: ${response.url}".fixColors())
+                sender.sendMessage(config.link.replace("{url}", response.url).fixColors())
             } catch (e: Exception) {
-                sender.sendMessage("&4Błąd: Nie udało się zdobyć nagrody!".fixColors())
+                sender.sendMessage(config.error.fixColors())
             }
         }
 

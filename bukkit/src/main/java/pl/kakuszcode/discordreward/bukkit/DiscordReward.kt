@@ -3,6 +3,7 @@ package pl.kakuszcode.discordreward.bukkit
 import eu.okaeri.configs.ConfigManager
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.bukkit.plugin.java.JavaPlugin
@@ -30,6 +31,7 @@ class DiscordReward : JavaPlugin() {
     private lateinit var database: Database
     private lateinit var service: DiscordService
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onEnable() {
 
         config = ConfigManager.create(Configuration::class.java) {

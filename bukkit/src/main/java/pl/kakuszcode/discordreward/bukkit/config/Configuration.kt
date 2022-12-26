@@ -50,4 +50,12 @@ class Configuration : OkaeriConfig() {
     @CustomKey("settings.bot.nickName")
     @Comment("support PlaceHolderAPI")
     var nickName = "%player_name%"
+    @CustomKey("settings.messages.link")
+    var link = "&2Sukces: &aTwój link do nagrody: {url}"
+    @CustomKey("settings.messages.isPicked")
+    var isPicked = "&4Błąd: &cOdebrałeś już nagrodę!"
+    @CustomKey("settings.messages.webSocketError")
+    var webSocketError = "&4Błąd: &cProblem z połączeniem!, sprobój pózniej!"
+    @CustomKey("settings.messages.error")
+    var error = "&4Błąd: Nie udało się zdobyć nagrody!"
 }

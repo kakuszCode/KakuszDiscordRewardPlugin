@@ -25,7 +25,7 @@ class MySQLProvider : Database {
         try {
             connection = db.connection
             val statement = connection.createStatement()
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `DiscordUsers` (`uuid` VARCHAR(17) NOT NULL, `discordID` LONG NOT NULL)")
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `DiscordUsers` (`uuid` VARCHAR(36) NOT NULL, `discordID` LONG NOT NULL)")
             statement.close()
         } catch (e: SQLException) {
             logger.severe("Problem z połączeniem z bazą danych!$e")

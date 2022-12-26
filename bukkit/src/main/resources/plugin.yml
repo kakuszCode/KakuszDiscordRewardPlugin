@@ -1,5 +1,5 @@
 name: DiscordReward
-version: '1.6.1'
+version: '1.7.0'
 main: pl.kakuszcode.discordreward.bukkit.DiscordReward
 authors: [robalmeister]
 commands:
