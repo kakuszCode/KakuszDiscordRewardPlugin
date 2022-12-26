@@ -58,6 +58,7 @@ class DiscordCommand(
                 sender.sendMessage(config.link.replace("{url}", response.url).fixColors())
             } catch (e: Exception) {
                 sender.sendMessage(config.error.fixColors())
+                e.printStackTrace()
             }
         }
 
