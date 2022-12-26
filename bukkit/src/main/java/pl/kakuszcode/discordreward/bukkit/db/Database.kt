@@ -8,4 +8,5 @@ interface Database {
     fun connect(password: String, logger: Logger)
     fun insertDiscordUser(user: DiscordUser, plugin: JavaPlugin)
     fun getDiscordUsers(logger: Logger): List<DiscordUser>
+    fun removeDiscordUser(user: DiscordUser, plugin: JavaPlugin)
 }

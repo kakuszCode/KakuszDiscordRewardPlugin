@@ -40,7 +40,7 @@ class DiscordCommand(
             sender.sendMessage("&4Błąd: &cProblem z połączeniem!, sprobój pózniej!".fixColors())
             return false
         }
-        if (service.hashMap[sender.uniqueId] != null) {
+        if (service.hashMap[sender.uniqueId] != null && !config.multiplyVerify) {
             sender.sendMessage("&4Błąd: &cOdebrałeś już nagrodę!".fixColors())
             return false
         }

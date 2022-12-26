@@ -25,7 +25,7 @@ class MySQLProvider : Database {
         try {
             connection = db.connection
             val statement = connection.createStatement()
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `DiscordUsers` (`uuid` VARCHAR NOT NULL, `discordID` LONG NOT NULL)")
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `DiscordUsers` (`uuid` VARCHAR(17) NOT NULL, `discordID` LONG NOT NULL)")
             statement.close()
         } catch (e: SQLException) {
             logger.severe("Problem z połączeniem z bazą danych!$e")
@@ -59,5 +59,13 @@ class MySQLProvider : Database {
             logger.severe("Błąd:$e")
         }
         return users
+    }
+    override fun removeDiscordUser(user: DiscordUser, plugin: JavaPlugin) {
+        plugin.server.scheduler.runTaskAsynchronously(plugin, Runnable {
+            val ps = connection.prepareStatement("DELETE FROM `DiscordUsers` WHERE uuid=?");
+            ps.setString(1, user.uuid.toString())
+            ps.execute()
+            ps.close()
+        })
     }
 }

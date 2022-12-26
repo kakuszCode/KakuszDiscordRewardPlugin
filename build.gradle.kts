@@ -6,7 +6,7 @@ plugins {
     kotlin("plugin.serialization") version "1.7.22"
 }
 group = "pl.kakuszcode"
-version = "1.5.0"
+version = "1.6.0"
 
 allprojects {
     apply(plugin = "java")

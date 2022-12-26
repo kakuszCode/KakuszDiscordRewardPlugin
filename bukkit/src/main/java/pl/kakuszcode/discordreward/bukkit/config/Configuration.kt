@@ -38,6 +38,8 @@ class Configuration : OkaeriConfig() {
 
     @CustomKey("settings.database.password")
     var password = ""
+    @CustomKey("settings.settings.multiplyVerify")
+    var multiplyVerify = false
     @CustomKey("settings.commands")
     @Comment("start without /")
     var commands = arrayListOf("say [player] sie zweryfikował!", "say pozdro 600")

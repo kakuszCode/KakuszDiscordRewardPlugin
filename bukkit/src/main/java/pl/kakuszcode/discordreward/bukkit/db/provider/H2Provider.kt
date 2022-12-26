@@ -6,10 +6,10 @@ import org.bukkit.plugin.java.JavaPlugin
 import pl.kakuszcode.discordreward.bukkit.db.Database
 import pl.kakuszcode.discordreward.bukkit.user.DiscordUser
 import java.sql.Connection
+import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.util.*
 import java.util.logging.Logger
-import kotlin.collections.ArrayList
 
 class H2Provider : Database {
     private lateinit var connection: Connection
@@ -28,7 +28,7 @@ class H2Provider : Database {
         try {
             connection = db.connection
             val statement = connection.createStatement()
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `DiscordUsers` (`uuid` VARCHAR NOT NULL, `discordID` LONG NOT NULL)")
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `DiscordUsers` (`uuid` VARCHAR(17) NOT NULL, `discordID` LONG NOT NULL)")
             statement.close()
         } catch (e: SQLException) {
             logger.severe("Problem z połączeniem z bazą danych!$e")
@@ -62,5 +62,14 @@ class H2Provider : Database {
             logger.severe("Błąd:$e")
         }
         return users
+    }
+
+    override fun removeDiscordUser(user: DiscordUser, plugin: JavaPlugin) {
+        plugin.server.scheduler.runTaskAsynchronously(plugin, Runnable {
+            val ps = connection.prepareStatement("DELETE FROM `DiscordUsers` WHERE uuid=?");
+            ps.setString(1, user.uuid.toString())
+            ps.execute()
+            ps.close()
+        })
     }
 }
