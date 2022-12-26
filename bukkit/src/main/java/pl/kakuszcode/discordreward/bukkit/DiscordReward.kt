@@ -3,7 +3,8 @@ package pl.kakuszcode.discordreward.bukkit
 import eu.okaeri.configs.ConfigManager
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.bukkit.plugin.java.JavaPlugin
 import pl.kakuszcode.discordreward.bukkit.bot.Bot
 import pl.kakuszcode.discordreward.bukkit.bot.task.BotTask
@@ -18,7 +19,6 @@ import pl.kakuszcode.discordreward.sdk.request.AuthorizationRequest
 import java.io.File
 
 
-@OptIn(DelicateCoroutinesApi::class)
 class DiscordReward : JavaPlugin() {
     companion object {
         var webSocketIsRunning = false
@@ -82,6 +82,9 @@ class DiscordReward : JavaPlugin() {
                 server.pluginManager.disablePlugin(this@DiscordReward)
             }
             loadWebSocket()
+            server.scheduler.runTaskTimerAsynchronously(this@DiscordReward, Runnable {
+                service.loadUsers(logger)
+            },6000L, 6000L)
             Bot(config).start()
             BotTask(service, config).runTaskTimerAsynchronously(this@DiscordReward, 1200, 1200)
         }

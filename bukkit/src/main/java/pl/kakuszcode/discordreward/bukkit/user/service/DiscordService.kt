@@ -9,6 +9,7 @@ import kotlin.collections.HashMap
 class DiscordService(val database: Database) {
     var hashMap = HashMap<UUID, DiscordUser>()
     fun loadUsers(logger: Logger){
+        hashMap.clear()
         database.getDiscordUsers(logger).forEach {
             hashMap[it.uuid] = it
         }
