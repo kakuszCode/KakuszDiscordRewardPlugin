@@ -23,7 +23,7 @@ allprojects {
         }
     }
     dependencies {
-        implementation("eu.okaeri:okaeri-configs-yaml-bukkit:4.0.8")
+        implementation("eu.okaeri:okaeri-configs-yaml-bukkit:4.0.9")
         compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
         implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
         implementation("eu.okaeri:okaeri-configs-serdes-bukkit:4.0.8")
