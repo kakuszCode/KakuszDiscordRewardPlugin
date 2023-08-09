@@ -27,7 +27,7 @@ allprojects {
         compileOnly("io.papermc.paper:paper-api:1.19.3-R0.1-SNAPSHOT")
         implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
         implementation("eu.okaeri:okaeri-configs-serdes-bukkit:4.0.8")
-        implementation("com.github.ben-manes.caffeine:caffeine:2.9.3")
+        implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
         implementation("com.h2database:h2:2.1.214")
         implementation("org.postgresql:postgresql:42.5.1")
         compileOnly("me.clip:placeholderapi:2.11.2")
