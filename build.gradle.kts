@@ -31,7 +31,7 @@ allprojects {
         implementation("com.h2database:h2:2.1.214")
         implementation("org.postgresql:postgresql:42.5.1")
         compileOnly("me.clip:placeholderapi:2.11.2")
-        implementation("com.zaxxer:HikariCP:4.0.3")
+        implementation("com.zaxxer:HikariCP:5.1.0")
         implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
         implementation("io.ktor:ktor-client-core:2.2.1")
         implementation("io.ktor:ktor-client-cio:2.2.1")
