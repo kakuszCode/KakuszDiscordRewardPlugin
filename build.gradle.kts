@@ -34,7 +34,7 @@ allprojects {
         implementation("com.zaxxer:HikariCP:4.0.3")
         implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
         implementation("io.ktor:ktor-client-core:2.2.1")
-        implementation("io.ktor:ktor-client-cio:2.2.1")
+        implementation("io.ktor:ktor-client-cio:2.3.9")
         implementation("io.ktor:ktor-client-content-negotiation:2.2.1")
         implementation("io.ktor:ktor-client-websockets:2.2.1")
         implementation("net.dv8tion:JDA:5.0.0-beta.2")
