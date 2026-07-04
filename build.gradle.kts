@@ -30,7 +30,7 @@ allprojects {
         implementation("com.github.ben-manes.caffeine:caffeine:2.9.3")
         implementation("com.h2database:h2:2.1.214")
         implementation("org.postgresql:postgresql:42.5.1")
-        compileOnly("me.clip:placeholderapi:2.11.2")
+        compileOnly("me.clip:placeholderapi:2.12.3")
         implementation("com.zaxxer:HikariCP:4.0.3")
         implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
         implementation("io.ktor:ktor-client-core:2.2.1")
