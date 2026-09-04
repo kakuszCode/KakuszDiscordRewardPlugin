@@ -28,7 +28,7 @@ allprojects {
         implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
         implementation("eu.okaeri:okaeri-configs-serdes-bukkit:4.0.8")
         implementation("com.github.ben-manes.caffeine:caffeine:2.9.3")
-        implementation("com.h2database:h2:2.1.214")
+        implementation("com.h2database:h2:2.5.250")
         implementation("org.postgresql:postgresql:42.5.1")
         compileOnly("me.clip:placeholderapi:2.11.2")
         implementation("com.zaxxer:HikariCP:4.0.3")
